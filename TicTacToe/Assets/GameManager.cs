@@ -6,6 +6,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     main main = null;
+    String[] ruleConstants = new String[] { "HOR01", "HOR02", "HOR03", "VER01", "HOR02", "HOR03", "CROSS01", "CROSS02" };
+
 
     // Start is called before the first frame update
     void Start()
@@ -27,14 +29,18 @@ public class GameManager : MonoBehaviour
 
         List<List<int>> pieceList = _pieceList;
 
+        int first = 0;
+        int second = 0;
+        int third = 0;
+
         //가로줄 체크
         for( int i = 0; i < 3; i++)
         {
-            int first  = pieceList[i][0];
-            int second = pieceList[i][1];
-            int third  = pieceList[i][2];
+            first  = pieceList[i][0];
+            second = pieceList[i][1];
+            third  = pieceList[i][2];
 
-            //가로줄 체
+            //가로줄 빈값 체크
             if( containEmpty(first, second, third))
             {
                 Debug.Log("배열이 빈값을 포함하고 있습니다.");
@@ -43,6 +49,7 @@ public class GameManager : MonoBehaviour
                else break;
             }
 
+            //가로줄 같은 값 잇는지 체크
             if (isSameValue(first, second, third))
             {
                 Debug.Log("배열이 같은 값으로 이루어져 있습니다.");
@@ -51,7 +58,63 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        // 세로줄 체크
+        for( int j = 0; j < 3; j++)
+        {
+            first = pieceList[0][j];
+            second = pieceList[1][j];
+            third = pieceList[2][j];
 
+            //가로줄 빈값 체크
+            if (containEmpty(first, second, third))
+            {
+                Debug.Log("배열이 빈값을 포함하고 있습니다.");
+
+                if (j < 2) continue;
+                else break;
+            }
+
+            //가로줄 같은 값 잇는지 체크
+            if (isSameValue(first, second, third))
+            {
+                Debug.Log("배열이 같은 값으로 이루어져 있습니다.");
+                if (j < 2) continue;
+                else break;
+            }
+        }
+
+
+        first = pieceList[0][0];
+        second = pieceList[1][1];
+        third = pieceList[2][2];
+
+        //좌우상하 대각선 빈값 체크
+        if (containEmpty(first, second, third))
+        {
+            Debug.Log("배열이 빈값을 포함하고 있습니다.");
+        }
+
+        //좌우상하 대각선 같은값 체크
+        if (isSameValue(first, second, third))
+        {
+            Debug.Log("배열이 같은 값으로 이루어져 있습니다.");
+        }
+
+        first = pieceList[0][2];
+        second = pieceList[1][1];
+        third = pieceList[2][0];
+
+        //우좌상하 대각선 빈값 체크
+        if (containEmpty(first, second, third))
+        {
+            Debug.Log("배열이 빈값을 포함하고 있습니다.");
+        }
+
+        //우좌상하 대각선 같은값 체크
+        if (isSameValue(first, second, third))
+        {
+            Debug.Log("배열이 같은 값으로 이루어져 있습니다.");
+        }
 
         return rtrn;
     }
