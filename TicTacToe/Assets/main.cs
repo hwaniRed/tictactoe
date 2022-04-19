@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 public class main : MonoBehaviour, IPointerClickHandler
 {
-    List<List<int>> pieceList = null;
+    GameManager gm;
+    private List<List<int>> pieceList = null;
     Turn turn;
 
     enum Turn
@@ -20,6 +22,8 @@ public class main : MonoBehaviour, IPointerClickHandler
     // Start is called before the first frame update
     void Start()
     {
+        gm = GameObject.Find("Canvas").GetComponent<GameManager>();
+
         turn = Turn.User;
 
         arrayInitiate();
@@ -30,20 +34,6 @@ public class main : MonoBehaviour, IPointerClickHandler
     void Update()
     {
         
-    }
-
-    public Button onBtnClick(Button button)
-    {
-        Debug.Log(button.name);
-        if(turn == Turn.User)
-        {
-            
-        }else
-        {
-            return null;
-        }
-
-        return button;
     }
 
     bool isOkCheck(int xIdx, int yIdx)
@@ -66,7 +56,7 @@ public class main : MonoBehaviour, IPointerClickHandler
         int len = 3;
 
         pieceList = new List<List<int>>();
-        for ( int i = 0; i < 3; i++)
+        for ( int i = 0; i < len; i++)
         {
             List<int> tmpList = new List<int>();
             for ( int j = 0; j < 3; j++)
@@ -84,6 +74,7 @@ public class main : MonoBehaviour, IPointerClickHandler
     {
         //throw new System.NotImplementedException();
         Debug.Log("Clicked: " + eventData.pointerCurrentRaycast.gameObject.name);
+        GameObject obj = eventData.pointerCurrentRaycast.gameObject;
         string objName = eventData.pointerCurrentRaycast.gameObject.name;
 
         int xIdx = -1;
@@ -92,7 +83,7 @@ public class main : MonoBehaviour, IPointerClickHandler
         {
             xIdx = Int32.Parse(objName.Split('_')[1]);
             yIdx = Int32.Parse(objName.Split('_')[2]);
-            Debug.Log($"xIdx : {xIdx}/ yIdx : {yIdx}");
+            //Debug.Log($"xIdx : {xIdx}/ yIdx : {yIdx}");
         }
 
         if (turn == Turn.User)
@@ -102,13 +93,47 @@ public class main : MonoBehaviour, IPointerClickHandler
                 pieceList[xIdx][yIdx] = (int)Turn.User;
                 //말 체크
 
+                gm.checkMatch(pieceList);
+
+                setButtonText(obj, (int)turn);
                 turn = Turn.Cpu;
+
+                //Cpu calcurate
             }
         }
         else
         {
+            Debug.Log("CPU 턴입니다.");
+
             return;
         }
 
+    }
+
+    public void setButtonText(GameObject button, int turn)
+    {
+        String btnStr = "";
+
+        if (turn == (int)Turn.User)
+        {
+            btnStr = "O";
+        }
+        else
+        {
+            btnStr = "X";
+        }
+
+        Text btnTxt = button.GetComponentInChildren<Text>();
+
+        btnTxt.enabled = true;
+        btnTxt.text = btnStr;
+        btnTxt.fontSize = 60;
+    }
+
+
+
+    public List<List<int>> getPieceList()
+    {
+        return this.pieceList;
     }
 }
