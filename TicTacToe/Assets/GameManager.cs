@@ -54,10 +54,9 @@ public class GameManager : MonoBehaviour
             if (isSameValue(first, second, third))
             {
                 Debug.Log("배열이 같은 값으로 이루어져 있습니다.");
-                String lineIdx = "HOR" + (i+1);     
+                String lineIdx = "HOR0" + (i+1);     
                 judgeWinner(lineIdx);
-                if (i < 2) continue;
-                else break;
+                break;
             }
         }
 
@@ -129,25 +128,28 @@ public class GameManager : MonoBehaviour
         int winId = -1;
         int lineNum = 0;
 
-        if(lineIdx == HOR_01 ){
+        if(lineIdx == Constants.HOR_01 ){
             lineNum = 0;
-        }else if(lineIdx == HOR_02){
+        }else if(lineIdx == Constants.HOR_02){
             lineNum = 1;
-        }else if(lineIdx == HOR_03){
+        }else if(lineIdx == Constants.HOR_03){
             lineNum = 2;
-        }else if(lineIdx == VER_01){
+        }else if(lineIdx == Constants.VER_01){
             lineNum = 0;
-        }else if(lineIdx == VER_02){
+        }else if(lineIdx == Constants.VER_02){
             lineNum = 1;
-        }else if(lineIdx == VER_03){
+        }else if(lineIdx == Constants.VER_03){
             lineNum = 2;
         }
+
+        Debug.Log($"Constants : {Constants.HOR_02}");
+        Debug.Log($"line : {lineIdx} / lineNum : {lineNum}");
 
         int firstVal = 0;
         int secondVal = 0;
         int thirdVal = 0;
 
-        if(lineIdx != CROSS01 && lineIdx != CROSS02){
+        if(lineIdx != Constants.CROSS_01 && lineIdx != Constants.CROSS_02){
             if(lineIdx.Contains("HOR")){
                 firstVal = pieceList[lineNum][0];
                 secondVal = pieceList[lineNum][1];
@@ -157,17 +159,21 @@ public class GameManager : MonoBehaviour
                 secondVal = pieceList[1][lineNum];
                 thirdVal = pieceList[3][lineNum];
             }
-        }else if( lineIdx == CROSS01){
+        }else if( lineIdx == Constants.CROSS_01){
             firstVal = pieceList[0][0];
             secondVal = pieceList[1][1];
-            thridVal = pieceList[2][2];
-        }else if ( lineIdx == CROSS02){
+            thirdVal = pieceList[2][2];
+        }else if ( lineIdx == Constants.CROSS_02){
             firstVal = pieceList[0][2];
             secondVal = pieceList[1][1];
-            thridVal = pieceList[2][0];
+            thirdVal = pieceList[2][0];
         }
 
-        String[] numAry = new String[]{firstVal, secondVal, thirdVal};
+        Debug.Log($"firstVal : {firstVal}");
+        Debug.Log($"secondVal : {secondVal}");
+        Debug.Log($"thirdVal : {thirdVal}");
+
+        int[] numAry = new int[]{firstVal, secondVal, thirdVal};
         
         int count = 0;
         for( int j = 0 ; j < 2 ; j++){
@@ -176,8 +182,9 @@ public class GameManager : MonoBehaviour
                     count = 0;  
                 } 
 
-                if( j == i){
+                if( j == numAry[i]){
                     count++;
+                    Debug.Log($"count : {count}");
                 }
 
                 if(count == 3){
@@ -186,10 +193,21 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if(winId == (int) Turn.User){
-            Debug.log("Player가 승리하였습니다.");
-        }else{
-            Debug.log("Cpu가 승리하였습니다.");
+        Debug.Log($"winId : {winId}");
+
+        Enum curTurn = main.getTurn();
+        Enum opstTurn = main.getOppositTurn(curTurn);
+
+        int curTurnVal = Convert.ToInt32(curTurn);
+        int opstTurnVal = Convert.ToInt32(opstTurn);
+        Debug.Log($"curTurnVal : {curTurnVal}");
+        Debug.Log($"opstTurnVal : {opstTurnVal}");
+
+        // TODO : Current가 어떤 값인지 알지 못하는데 log에 규정되어있음...
+        if(winId == curTurnVal){
+            Debug.Log("Player가 승리하였습니다.");
+        }else if(winId == opstTurnVal ){
+            Debug.Log("Cpu가 승리하였습니다.");
         }
 
     }

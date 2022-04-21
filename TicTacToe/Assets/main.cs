@@ -9,11 +9,11 @@ using UnityEngine.UIElements;
 
 public class main : MonoBehaviour, IPointerClickHandler
 {
-    GameManager gm;
+    public GameManager gm;
     private List<List<int>> pieceList = null;
-    Turn turn;
+    private Turn turn;
 
-    enum Turn
+    public enum Turn
     {
         User
         , Cpu
@@ -22,7 +22,7 @@ public class main : MonoBehaviour, IPointerClickHandler
     // Start is called before the first frame update
     void Start()
     {
-        gm = GameObject.Find("Canvas").GetComponent<GameManager>();
+        gm = GameObject.Find("Canvas").AddComponent<GameManager>() as GameManager;
 
         turn = Turn.User;
 
@@ -90,9 +90,9 @@ public class main : MonoBehaviour, IPointerClickHandler
         {
             if(isOkCheck(xIdx, yIdx))
             {
-                pieceList[xIdx][yIdx] = (int)Turn.User;
+                //pieceList[xIdx][yIdx] = (int)Turn.User;
                 //말 체크
-
+                pieceList = getDummyList();
                 gm.checkMatch(pieceList);
 
                 setButtonText(obj, (int)turn);
@@ -135,5 +135,50 @@ public class main : MonoBehaviour, IPointerClickHandler
     public List<List<int>> getPieceList()
     {
         return this.pieceList;
+    }
+
+    public Enum getTurn(){
+        return this.turn;
+    }
+
+    public Enum getOppositTurn(Enum _turn){
+        Turn returnVal;
+
+        if((Turn)_turn == Turn.User){
+            returnVal = Turn.Cpu;
+        }else{
+            returnVal = Turn.User;
+        }
+        return returnVal;
+    }
+    //dummy data 만들기
+    public List<List<int>> getDummyList(){
+
+            List<List<int>> dummyList = new List<List<int>>();
+
+            List<int> line1 = new List<int>();
+            List<int> line2 = new List<int>();
+            List<int> line3 = new List<int>();
+
+            line1.Add(1);
+            line1.Add(0);
+            line1.Add(0);
+
+            line2.Add(1);
+            line2.Add(1);
+            line2.Add(1);
+
+            line3.Add(0);
+            line3.Add(0);
+            line3.Add(0);
+
+            dummyList.Add(line1);
+            dummyList.Add(line2);
+            dummyList.Add(line3);
+
+            Debug.Log("dummyList size : " + dummyList.Count);
+
+        return dummyList;
+
     }
 }
