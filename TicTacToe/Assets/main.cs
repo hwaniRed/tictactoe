@@ -5,13 +5,19 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class main : MonoBehaviour, IPointerClickHandler
 {
     public GameManager gm;
+    public GameObject popup;
     private List<List<int>> pieceList = null;
     private Turn turn;
+
+    public Button btnMenu;
+    public Button btnRestart;
+    public Button btnClose;
+    public Button btnBack;
 
     public enum Turn
     {
@@ -23,10 +29,24 @@ public class main : MonoBehaviour, IPointerClickHandler
     void Start()
     {
         gm = GameObject.Find("Canvas").AddComponent<GameManager>() as GameManager;
+        //popup = GameObject.Find("popup").GetComponent<Panel>();
+
+        btnMenu = GameObject.Find("btnMenu").GetComponent<Button>();
+        btnRestart = GameObject.Find("btnRestart").GetComponent<Button>();
+        btnClose = GameObject.Find("btnClose").GetComponent<Button>();
+        btnMenu.onClick.AddListener(delegate{ this.onPopupBtnClick(this.btnMenu);});
+        btnRestart.onClick.AddListener(delegate{ this.onPopupBtnClick(this.btnRestart);});
+        btnClose.onClick.AddListener(delegate{ this.onPopupBtnClick(this.btnClose);});
+
 
         turn = Turn.User;
-
+ 
         arrayInitiate();
+
+        if(popup != null){
+            popup.SetActive(false);
+        }
+        //popup.setActive(false);
 
     }
 
@@ -79,6 +99,13 @@ public class main : MonoBehaviour, IPointerClickHandler
 
         int xIdx = -1;
         int yIdx = -1;
+
+        if(objName == "btnBack"){
+            popup.SetActive(true);
+            Text popupTitle = GameObject.Find("tvPopup").GetComponent<Text>();
+            popupTitle.text = "게임을 종료하고 메뉴로 돌아가시겠습니까?";
+        }
+
         if (objName.Contains('_'))
         {
             xIdx = Int32.Parse(objName.Split('_')[1]);
@@ -165,7 +192,7 @@ public class main : MonoBehaviour, IPointerClickHandler
             line1.Add(0);
 
             line2.Add(1);
-            line2.Add(1);
+            line2.Add(0);
             line2.Add(1);
 
             line3.Add(0);
@@ -180,5 +207,18 @@ public class main : MonoBehaviour, IPointerClickHandler
 
         return dummyList;
 
+    }
+
+    public void onPopupBtnClick(Button obj){
+        Debug.Log("Popup button Click!!!");
+        Debug.Log("object : " + obj.name);
+
+        if(obj.name == "btnRestart"){
+            SceneManager.LoadScene("IngameScene");
+        }else if(obj.name == "btnMenu"){
+
+        }else if(obj.name == "btnClose"){
+            popup.SetActive(false);
+        }
     }
 }

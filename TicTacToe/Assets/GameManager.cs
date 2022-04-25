@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -204,10 +205,18 @@ public class GameManager : MonoBehaviour
         Debug.Log($"opstTurnVal : {opstTurnVal}");
 
         // TODO : Current가 어떤 값인지 알지 못하는데 log에 규정되어있음...
+        GameObject popup = main.popup;
+        Text tvPopup = popup.transform.Find("tvPopup").GetComponent<Text>();
+
+        popup.SetActive(true);
+
         if(winId == curTurnVal){
             Debug.Log("Player가 승리하였습니다.");
+            tvPopup.text = "Player가 승리하였습니다.";
+
         }else if(winId == opstTurnVal ){
             Debug.Log("Cpu가 승리하였습니다.");
+            tvPopup.text = "Cpu가 승리하였습니다.";
         }
 
     }
