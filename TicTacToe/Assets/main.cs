@@ -59,6 +59,11 @@ public class main : MonoBehaviour, IPointerClickHandler
     bool isOkCheck(int xIdx, int yIdx)
     {
         bool isOk = false;
+        if( xIdx == -1 || yIdx == -1){
+            Debug.Log("xIdx : " + xIdx +"/ yIdx : " + yIdx);
+            Debug.Log("Point Not Clicked!!!");
+            return isOk;
+        }
 
         int val = pieceList[xIdx][yIdx];
 
@@ -117,15 +122,16 @@ public class main : MonoBehaviour, IPointerClickHandler
         {
             if(isOkCheck(xIdx, yIdx))
             {
-                //pieceList[xIdx][yIdx] = (int)Turn.User;
+                pieceList[xIdx][yIdx] = (int)Turn.User;
                 //말 체크
-                pieceList = getDummyList();
+                //pieceList = getDummyList();
                 gm.checkMatch(pieceList);
 
                 setButtonText(obj, (int)turn);
                 turn = Turn.Cpu;
 
                 //Cpu calcurate
+                gm.cpuAction();
             }
         }
         else
@@ -154,7 +160,7 @@ public class main : MonoBehaviour, IPointerClickHandler
 
         btnTxt.enabled = true;
         btnTxt.text = btnStr;
-        btnTxt.fontSize = 60;
+        btnTxt.fontSize = 160;
     }
 
 
@@ -166,6 +172,10 @@ public class main : MonoBehaviour, IPointerClickHandler
 
     public Enum getTurn(){
         return this.turn;
+    }
+
+    public void setTurn(Enum turn){
+        this.turn = (Turn)turn;
     }
 
     public Enum getOppositTurn(Enum _turn){
