@@ -28,9 +28,12 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public bool checkMatch(List<List<int>> _pieceList)
+    public Dictionary<String, object> checkMatch(List<List<int>> _pieceList)
     {
+        Dictionary<String, object> returnMap = new Dictionary<String, object>();
+
         bool rtrn = false;
+        String checkedLine = "";
 
         pieceList = _pieceList;
 
@@ -58,9 +61,12 @@ public class GameManager : MonoBehaviour
             if (isSameValue(first, second, third))
             {
                 Debug.Log($"HOR_{i+1} : 배열이 같은 값으로 이루어져 있습니다.");
-                String lineIdx = "HOR0" + (i+1);     
-                judgeWinner(lineIdx);
-                break;
+                checkedLine = "HOR0" + (i+1);   
+                rtrn = true;  
+                returnMap.Add("isCheck", rtrn);
+                returnMap.Add("checkedLine", checkedLine);
+                
+                return returnMap;
             }
         }
 
@@ -84,9 +90,12 @@ public class GameManager : MonoBehaviour
             if (isSameValue(first, second, third))
             {
                 Debug.Log($"VER_{j+1} : 배열이 같은 값으로 이루어져 있습니다.");
-                String lineIdx = "VER0" + (j+1);     
-                judgeWinner(lineIdx);
-                break;
+                rtrn = true;     
+                checkedLine = "VER0" + (j+1);     
+                returnMap.Add("isCheck", rtrn);
+                returnMap.Add("checkedLine", checkedLine);
+                
+                return returnMap;
             }
         }
 
@@ -103,7 +112,12 @@ public class GameManager : MonoBehaviour
             if (isSameValue(first, second, third))
             {
                 Debug.Log("CROSS01 : 배열이 같은 값으로 이루어져 있습니다.");
-                judgeWinner(Constants.CROSS_01);
+                rtrn = true;     
+                checkedLine = Constants.CROSS_01;     
+                returnMap.Add("isCheck", rtrn);
+                returnMap.Add("checkedLine", checkedLine);
+                
+                return returnMap;
             }
         }
 
@@ -119,11 +133,19 @@ public class GameManager : MonoBehaviour
             if (isSameValue(first, second, third))
             {
                 Debug.Log("CROSS02 : 배열이 같은 값으로 이루어져 있습니다.");
-                judgeWinner(Constants.CROSS_02);
+                rtrn = true;     
+                checkedLine = Constants.CROSS_02;     
+                returnMap.Add("isCheck", rtrn);
+                returnMap.Add("checkedLine", checkedLine);
+                
+                return returnMap;
             }
         }
 
-        return rtrn;
+        returnMap.Add("isCheck", rtrn);
+        returnMap.Add("checkedLine", "");
+
+        return returnMap;
     }
 
     public void judgeWinner(String lineIdx){
@@ -273,9 +295,9 @@ public class GameManager : MonoBehaviour
         return result;
     }
 
-    IEnumerator popupOpen(String popupMsg){
+    public IEnumerator popupOpen(String popupMsg){
         
-        Debug.Log("1초뒤 파업 오픈");
+        Debug.Log("1초뒤 팝업 오픈");
         yield return new WaitForSeconds(1.5f);
         
         GameObject popup = main.popup;

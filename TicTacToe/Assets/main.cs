@@ -123,15 +123,37 @@ public class main : MonoBehaviour, IPointerClickHandler
             if(isOkCheck(xIdx, yIdx))
             {
                 pieceList[xIdx][yIdx] = (int)Turn.User;
+                // 돌 표시
+                setButtonText(obj, (int)turn);
                 //말 체크
                 //pieceList = getDummyList();
-                gm.checkMatch(pieceList);
+                Dictionary<String, object> checkMap = gm.checkMatch(pieceList);
 
-                setButtonText(obj, (int)turn);
-                turn = Turn.Cpu;
+                bool isCheck = false;
+                if(checkMap.ContainsKey("isCheck")){
+                    isCheck = (bool)checkMap["isCheck"];
+                }
 
-                //Cpu calcurate
-                gm.cpuAction();
+                String checkedLine = "";
+                if(checkMap.ContainsKey("checkedLine")){
+                    checkedLine = (string)checkMap["checkedLine"];
+                }
+
+                Debug.Log("isCheck : " + isCheck);
+                //judgeWinner 한 다음 할 일 셋팅
+                if(!isCheck){
+
+                    turn = Turn.Cpu;
+                    //Cpu calcurate
+                    
+                    Debug.Log("Delay 주기");
+                    StartCoroutine(setDelay(1.0f));
+
+                    gm.cpuAction();
+                }else{
+                    gm.judgeWinner(checkedLine);
+                    //StartCouroutin(main.popupOpen());
+                }
             }
         }
         else
@@ -230,5 +252,11 @@ public class main : MonoBehaviour, IPointerClickHandler
         }else if(obj.name == "btnClose"){
             popup.SetActive(false);
         }
+    }
+
+    public IEnumerator setDelay(float delayTime){
+        
+        Debug.Log(delayTime + "초 딜레이 주기");
+        yield return new WaitForSeconds(delayTime);
     }
 }
