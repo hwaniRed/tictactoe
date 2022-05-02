@@ -125,6 +125,12 @@ public class main : MonoBehaviour, IPointerClickHandler
                 pieceList[xIdx][yIdx] = (int)Turn.User;
                 // 돌 표시
                 setButtonText(obj, (int)turn);
+                object[] param = new object[2];
+                param[0] = pieceList;
+                param[1] = turn;
+
+                this.SendMessage("turnChange", param);
+                return;
                 //말 체크
                 //pieceList = getDummyList();
                 Dictionary<String, object> checkMap = gm.checkMatch(pieceList);

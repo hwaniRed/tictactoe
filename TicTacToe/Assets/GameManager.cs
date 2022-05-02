@@ -11,8 +11,10 @@ public class GameManager : MonoBehaviour
 
     List<String> emptySpaceList = null;
     main main = null;
-    String[] ruleConstants = new String[] { "HOR01", "HOR02", "HOR03", "VER01", "HOR02", "HOR03", "CROSS01", "CROSS02" };
 
+    List<Enum> turnAry = null;
+
+    int turnCount;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +22,9 @@ public class GameManager : MonoBehaviour
         Debug.Log("GameManager Start!!");
         // ControlManager 오브젝트 안에 ControlManager 스크립트를 가져온다.
         main = GameObject.Find("Canvas").GetComponent<main>();
+
+        turnAry = new List<Enum>();
+        turnCount = -1;
     }
 
     // Update is called once per frame
@@ -333,5 +338,23 @@ public class GameManager : MonoBehaviour
         }
 
         return emptySpaceList;
+    }
+
+    public void turnChange(object[] param){
+        
+        Debug.Log("turnChange!!");
+
+        List<List<int>> _pieceList = param[0] as List<List<int>>;
+        Enum _enum = param[1] as Enum;
+
+        turnAry.Add(_enum);
+
+        Dictionary<String, object> checkedDic = checkMatch(_pieceList);
+
+        if(_enum == (Enum)main.Turn.User){
+            
+        }else{
+
+        }
     }
 }
