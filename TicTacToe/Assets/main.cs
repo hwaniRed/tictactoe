@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Random;
 
 public class main : MonoBehaviour, IPointerClickHandler
 {
@@ -28,12 +29,17 @@ public class main : MonoBehaviour, IPointerClickHandler
     // Start is called before the first frame update
     void Start()
     {
+        turn = Turn.User;
+        Debug.Log("U turn : " + turn.ToString());
+        turn = Turn.Cpu;
+        Debug.Log("C turn : " + turn);
+
         gm = GameObject.Find("Canvas").AddComponent<GameManager>() as GameManager;
         //popup = GameObject.Find("popup").GetComponent<Panel>();
 
-        btnMenu = GameObject.Find("btnMenu").GetComponent<Button>();
-        btnRestart = GameObject.Find("btnRestart").GetComponent<Button>();
-        btnClose = GameObject.Find("btnClose").GetComponent<Button>();
+        //btnMenu = GameObject.Find("btnMenu").GetComponent<Button>();
+        //btnRestart = GameObject.Find("btnRestart").GetComponent<Button>();
+        //btnClose = GameObject.Find("btnClose").GetComponent<Button>();
         btnMenu.onClick.AddListener(delegate{ this.onPopupBtnClick(this.btnMenu);});
         btnRestart.onClick.AddListener(delegate{ this.onPopupBtnClick(this.btnRestart);});
         btnClose.onClick.AddListener(delegate{ this.onPopupBtnClick(this.btnClose);});
@@ -61,7 +67,7 @@ public class main : MonoBehaviour, IPointerClickHandler
         bool isOk = false;
         if( xIdx == -1 || yIdx == -1){
             Debug.Log("xIdx : " + xIdx +"/ yIdx : " + yIdx);
-            Debug.Log("Point Not Clicked!!!");
+            Debug.Log("Poi  nt Not Clicked!!!");
             return isOk;
         }
 
@@ -97,8 +103,11 @@ public class main : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        //int randomNum = Range(0, 2);
+        //Debug.Log("randomNum : " + randomNum );
+
         //throw new System.NotImplementedException();
-        Debug.Log("Clicked: " + eventData.pointerCurrentRaycast.gameObject.name);
+        //Debug.Log("Clicked: " + eventData.pointerCurrentRaycast.gameObject.name);
         GameObject obj = eventData.pointerCurrentRaycast.gameObject;
         string objName = eventData.pointerCurrentRaycast.gameObject.name;
 
@@ -129,8 +138,8 @@ public class main : MonoBehaviour, IPointerClickHandler
                 param[0] = pieceList;
                 param[1] = turn;
 
-                this.SendMessage("turnChange", param);
-                return;
+                //this.SendMessage("turnChange", param);
+                //return;
                 //말 체크
                 //pieceList = getDummyList();
                 Dictionary<String, object> checkMap = gm.checkMatch(pieceList);
@@ -245,6 +254,14 @@ public class main : MonoBehaviour, IPointerClickHandler
 
         return dummyList;
 
+    }
+
+    public void onBackBtnClick(){
+        Debug.Log("onBackBtnClick!!");
+
+        popup.SetActive(true);
+        Text popupTitle = GameObject.Find("tvPopup").GetComponent<Text>();
+        popupTitle.text = "게임을 종료하고 메뉴로 돌아가시겠습니까?";
     }
 
     public void onPopupBtnClick(Button obj){

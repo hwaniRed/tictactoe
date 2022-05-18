@@ -204,7 +204,25 @@ public class GameManager : MonoBehaviour
         Debug.Log($"thirdVal : {thirdVal}");
 
         int[] numAry = new int[]{firstVal, secondVal, thirdVal};
-        
+        List<int> tmpList = null;
+
+        for( int i = 0 ; i < 2 ; i++){
+            tmpList = new List<int>();
+            for(int j = 0 ; j < 3 ; j++){
+                if(i != numAry[j]){
+                    tmpList.Add(numAry[j]);
+                }
+            }
+        }
+
+        if(tmpList.Count == 3 ) {
+		    winId = tmpList[0];
+		    Debug.Log(" 승리!!!");
+        }else{
+		// 세 칸의 값이 다른 값이 들어왔다 ===> 앞의 라인 탐색 로직이 틀렸다는 뜻, 로직 재점검
+        }
+
+        /*
         int count = 0;
         for( int j = 0 ; j < 2 ; j++){
             for(int i = 0 ; i < 3 ; i++){
@@ -222,7 +240,7 @@ public class GameManager : MonoBehaviour
                 }        
             }
         }
-
+        */
         Debug.Log($"winId : {winId}");
 
         Enum curTurn = main.getTurn();
@@ -235,6 +253,14 @@ public class GameManager : MonoBehaviour
 
         String popupMsg = "";
 
+        if(winId == (int)main.Turn.User){
+            Debug.Log("Player가 승리하였습니다.");
+            popupMsg = "PLAYER가 승리하였습니다.";
+        }else if (winId == (int)main.Turn.Cpu){
+            Debug.Log("Cpu가 승리하였습니다.");
+            popupMsg = "CPU가 승리하였습니다.";
+        }
+        /*
         if(winId == curTurnVal){
             Debug.Log("Player가 승리하였습니다.");
             popupMsg = "PLAYER가 승리하였습니다.";
@@ -243,6 +269,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Cpu가 승리하였습니다.");
             popupMsg = "CPU가 승리하였습니다.";
         }
+        */
 
         StartCoroutine(popupOpen(popupMsg));
     }
