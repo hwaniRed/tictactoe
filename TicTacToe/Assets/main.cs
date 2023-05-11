@@ -20,6 +20,9 @@ public class main : MonoBehaviour, IPointerClickHandler
     public Button btnClose;
     public Button btnBack;
 
+    public delegate void CpuAction();
+    public CpuAction cpuAction;
+
     public enum Turn
     {
         User
@@ -35,6 +38,8 @@ public class main : MonoBehaviour, IPointerClickHandler
         Debug.Log("C turn : " + turn);
 
         gm = GameObject.Find("Canvas").AddComponent<GameManager>() as GameManager;
+        cpuAction = gm.cpuAction;
+        
         //popup = GameObject.Find("popup").GetComponent<Panel>();
 
         //btnMenu = GameObject.Find("btnMenu").GetComponent<Button>();
@@ -162,13 +167,14 @@ public class main : MonoBehaviour, IPointerClickHandler
                     //Cpu calcurate
                     
                     Debug.Log("Delay 주기");
-                    StartCoroutine(setDelay(1.0f));
 
-                    gm.cpuAction();
+                    StartCoroutine(setDelay(2.0f, cpuAction));
                 }else{
                     gm.judgeWinner(checkedLine);
                     //StartCouroutin(main.popupOpen());
                 }
+            }else{
+                // 둜수 없는 곳에 두었으므로 alert 팝업 띄운다.
             }
         }
         else
@@ -277,9 +283,13 @@ public class main : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public IEnumerator setDelay(float delayTime){
+    public IEnumerator setDelay(float delayTime, CpuAction callAction){
         
         Debug.Log(delayTime + "초 딜레이 주기");
         yield return new WaitForSeconds(delayTime);
+
+        if(callAction != null){
+            callAction();
+        }
     }
 }
